@@ -10,6 +10,9 @@
         role: "{{ aws_role }}"
         handler: image_resize.lambda_handler
       register: lambda_info
+      # If a new aws_role is created there is 5-6sec delay before lambda can assume the role
+      until: lambda_info is succeeded
+      delay: 6
     
     - name: Create function alias name
       lambda_alias:
